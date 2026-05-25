@@ -1,12 +1,10 @@
 fastapi
-uvicorn[standard]
+uvicorn
 python-dotenv
 pydantic
-openai
-langchain
+groq
 chromadb
-sentence-transformers
 pypdf
 python-multipart
 httpx
-groq
+numpy
