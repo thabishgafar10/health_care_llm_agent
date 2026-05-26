@@ -6,7 +6,7 @@ from app.services.embedding_service import (
 
 client = chromadb.Client()
 
-collection = client.create_collection(
+collection = client.get_or_create_collection(
     name="medical_knowledge"
 )
 
@@ -51,6 +51,9 @@ def add_document(text: str):
 
 def retrieve_context(query: str):
 
+    if collection.count() == 0:
+        return "No uploaded medical documents are available yet."
+
     query_embedding = generate_embedding(query)
 
     results = collection.query(
@@ -60,7 +63,7 @@ def retrieve_context(query: str):
         n_results=3
     )
 
-    contexts = results["documents"][0]
+    contexts = results.get("documents", [[]])[0]
 
     combined_context = "\n".join(contexts)
 

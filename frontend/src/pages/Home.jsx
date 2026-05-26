@@ -7,30 +7,64 @@ import useChat from "../hooks/useChat"
 const Home = () => {
 
   const {
-    messages,
+
+    chats,
+
+    activeChat,
+
+    activeChatId,
+
+    setActiveChatId,
+
+    createNewChat,
+
     sendMessage,
+
     loading
+
   } = useChat()
 
   return (
 
     <div
       className="
-        h-screen
+        h-full
         bg-[#0f1117]
         flex
-        p-4
         gap-4
+        p-4
       "
     >
 
-      <Sidebar />
+      {/* LEFT SIDEBAR */}
+
+      <Sidebar
+
+        chats={chats}
+
+        activeChatId={activeChatId}
+
+        setActiveChatId={
+          setActiveChatId
+        }
+
+        createNewChat={
+          createNewChat
+        }
+      />
+
+      {/* CHAT AREA */}
 
       <div className="flex-1">
 
         <ChatWindow
-          messages={messages}
+
+          messages={
+            activeChat?.messages || []
+          }
+
           sendMessage={sendMessage}
+
           loading={loading}
         />
 

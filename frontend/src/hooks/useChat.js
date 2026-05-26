@@ -1,51 +1,149 @@
-import { useState, useEffect } from "react"
+import {
+  useState,
+  useEffect
+} from "react"
 
 import API from "../services/api"
 
 const useChat = () => {
 
-  const [messages, setMessages] = useState(() => {
-    const savedHistory = localStorage.getItem(
-      "chat_history"
-    )
+  const getErrorMessage = (error) => {
 
-    if (!savedHistory) return []
+    const detail =
+      error.response?.data?.detail
 
-    try {
-      const parsedHistory = JSON.parse(savedHistory)
-
-      return Array.isArray(parsedHistory) ? parsedHistory : []
-    } catch {
-      return []
+    if (typeof detail === "string") {
+      return detail
     }
-  })
 
-  const [loading, setLoading] = useState(false)
+    if (error.code === "ERR_NETWORK") {
+      return "Cannot reach the backend. Make sure the FastAPI server is running on the URL in frontend/.env."
+    }
+
+    return "Something went wrong while getting the assistant response."
+  }
+
+  const [chats, setChats] = useState([])
+
+  const [activeChatId, setActiveChatId] =
+    useState(null)
+
+  const [loading, setLoading] =
+    useState(false)
+
+  // LOAD CHATS
+
+  useEffect(() => {
+
+    const savedChats =
+      localStorage.getItem(
+        "health_chats"
+      )
+
+    if (savedChats) {
+
+      const parsedChats =
+        JSON.parse(savedChats)
+
+      setChats(parsedChats)
+
+      if (parsedChats.length > 0) {
+
+        setActiveChatId(
+          parsedChats[0].id
+        )
+      }
+
+    } else {
+
+      createNewChat()
+    }
+
+  }, [])
+
+  // SAVE CHATS
 
   useEffect(() => {
 
     localStorage.setItem(
-      "chat_history",
-      JSON.stringify(messages)
+
+      "health_chats",
+
+      JSON.stringify(chats)
     )
 
-  }, [messages])
+  }, [chats])
+
+  // CREATE NEW CHAT
+
+  const createNewChat = () => {
+
+    const newChat = {
+
+      id: Date.now(),
+
+      title: "New Chat",
+
+      messages: []
+    }
+
+    setChats(prev => [
+      newChat,
+      ...prev
+    ])
+
+    setActiveChatId(newChat.id)
+  }
+
+  // ACTIVE CHAT
+
+  const activeChat = chats.find(
+    chat => chat.id === activeChatId
+  )
+
+  // SEND MESSAGE
 
   const sendMessage = async (text) => {
 
-    const messageText = text.trim()
-
-    if (!messageText) return
+    if (!text.trim()) return
 
     const userMessage = {
+
       role: "user",
-      content: messageText
+
+      content: text
     }
 
-    setMessages(prev => [
-      ...prev,
-      userMessage
-    ])
+    // UPDATE USER MESSAGE
+
+    const updatedChats = chats.map(
+      chat => {
+
+        if (
+          chat.id === activeChatId
+        ) {
+
+          return {
+
+            ...chat,
+
+            title:
+              chat.messages.length === 0
+                ? text.slice(0, 30)
+                : chat.title,
+
+            messages: [
+              ...chat.messages,
+              userMessage
+            ]
+          }
+        }
+
+        return chat
+      }
+    )
+
+    setChats(updatedChats)
 
     setLoading(true)
 
@@ -54,33 +152,72 @@ const useChat = () => {
       const response = await API.post(
         "/chat",
         {
-          message: messageText
+          message: text
         }
       )
 
       const aiMessage = {
+
         role: "assistant",
-        content: response.data?.response || "No response received."
+
+        content:
+          response.data.response
       }
 
-      setMessages(prev => [
-        ...prev,
-        aiMessage
-      ])
+      setChats(prev =>
+        prev.map(chat => {
+
+          if (
+            chat.id === activeChatId
+          ) {
+
+            return {
+
+              ...chat,
+
+              messages: [
+                ...chat.messages,
+                aiMessage
+              ]
+            }
+          }
+
+          return chat
+        })
+      )
 
     } catch (error) {
 
       console.error(error)
 
-      const errorMessage = {
+      const aiMessage = {
+
         role: "assistant",
-        content: "Something went wrong."
+
+        content: getErrorMessage(error)
       }
 
-      setMessages(prev => [
-        ...prev,
-        errorMessage
-      ])
+      setChats(prev =>
+        prev.map(chat => {
+
+          if (
+            chat.id === activeChatId
+          ) {
+
+            return {
+
+              ...chat,
+
+              messages: [
+                ...chat.messages,
+                aiMessage
+              ]
+            }
+          }
+
+          return chat
+        })
+      )
 
     } finally {
 
@@ -89,8 +226,19 @@ const useChat = () => {
   }
 
   return {
-    messages,
+
+    chats,
+
+    activeChat,
+
+    activeChatId,
+
+    setActiveChatId,
+
+    createNewChat,
+
     sendMessage,
+
     loading
   }
 }

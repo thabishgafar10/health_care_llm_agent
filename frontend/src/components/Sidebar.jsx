@@ -1,153 +1,177 @@
-import UploadBox from "./UploadBox"
+const Sidebar = ({
 
-const Sidebar = () => {
+  chats,
+
+  activeChatId,
+
+  setActiveChatId,
+
+  createNewChat
+
+}) => {
+
+  const logout = () => {
+
+    localStorage.removeItem(
+      "health_user"
+    )
+
+    window.location.href = "/"
+  }
 
   return (
 
     <div
       className="
-        w-[260px]
+        w-[300px]
         bg-[#171923]
         rounded-3xl
         p-5
-        flex
-        flex-col
-        justify-between
         border
         border-[#2a2d3a]
+        flex
+        flex-col
       "
     >
 
+      {/* Header */}
+
       <div>
 
-        {/* Logo */}
+        <h1
+          className="
+            text-2xl
+            font-bold
+          "
+        >
 
-        <div className="flex items-center gap-3">
+          HealthMind AI
 
-          <div
-            className="
-              w-10
-              h-10
-              rounded-xl
-              bg-orange-500
-            "
-          ></div>
+        </h1>
 
-          <div>
+        <p
+          className="
+            text-gray-400
+            text-sm
+            mt-1
+          "
+        >
 
-            <h1
-              className="
-                text-xl
-                font-bold
-              "
-            >
+          Healthcare Agent Platform
 
-              HealthMind
+        </p>
 
-            </h1>
+      </div>
 
-            <p
-              className="
-                text-xs
-                text-gray-400
-              "
-            >
+      {/* New Chat */}
 
-              AI Healthcare Assistant
+      <button
 
-            </p>
+        onClick={createNewChat}
 
-          </div>
+        className="
+          mt-8
+          w-full
+          bg-blue-600
+          hover:bg-blue-700
+          transition
+          p-4
+          rounded-2xl
+          font-semibold
+        "
+      >
 
-        </div>
+        + New Chat
 
-        {/* Navigation */}
+      </button>
 
-        <div className="mt-10 space-y-3">
+      {/* Chat History */}
 
-          <button
-            className="
-              w-full
-              bg-[#232734]
-              hover:bg-[#2f3443]
-              transition
-              p-4
-              rounded-2xl
-              text-left
-            "
-          >
+      <div className="mt-8 flex-1 overflow-y-auto">
 
-            AI Chat
+        <p
+          className="
+            text-gray-400
+            text-sm
+            mb-4
+          "
+        >
 
-          </button>
+          Recent Chats
 
-          <button
-            className="
-              w-full
-              bg-[#232734]
-              hover:bg-[#2f3443]
-              transition
-              p-4
-              rounded-2xl
-              text-left
-            "
-          >
+        </p>
 
-            Medical Reports
+        <div className="space-y-3">
 
-          </button>
+          {
+            chats.map(chat => (
 
-          <button
-            className="
-              w-full
-              bg-[#232734]
-              hover:bg-[#2f3443]
-              transition
-              p-4
-              rounded-2xl
-              text-left
-            "
-          >
+              <button
 
-            Upload PDFs
+                key={chat.id}
 
-          </button>
+                onClick={() =>
+                  setActiveChatId(chat.id)
+                }
 
-        </div>
+                className={
 
-        {/* Upload */}
+                  activeChatId === chat.id
 
-        <div className="mt-10">
+                  ? `
+                    w-full
+                    text-left
+                    bg-blue-600
+                    p-4
+                    rounded-2xl
+                    truncate
+                  `
 
-          <UploadBox />
+                  : `
+                    w-full
+                    text-left
+                    bg-[#232734]
+                    hover:bg-[#2d3345]
+                    transition
+                    p-4
+                    rounded-2xl
+                    truncate
+                  `
+                }
+              >
+
+                {chat.title}
+
+              </button>
+            ))
+          }
 
         </div>
 
       </div>
 
-      {/* Bottom Card */}
+      {/* Bottom */}
 
-      <div
-        className="
-          bg-gradient-to-br
-          from-orange-500
-          to-pink-500
-          p-5
-          rounded-3xl
-        "
-      >
+      <div className="mt-6">
 
-        <p className="font-bold">
+        <button
 
-          AI Healthcare Platform
+          onClick={logout}
 
-        </p>
+          className="
+            w-full
+            bg-red-500
+            hover:bg-red-600
+            transition
+            p-4
+            rounded-2xl
+            font-semibold
+          "
+        >
 
-        <p className="text-sm mt-2">
+          Logout
 
-          Powered by RAG + Groq
-
-        </p>
+        </button>
 
       </div>
 

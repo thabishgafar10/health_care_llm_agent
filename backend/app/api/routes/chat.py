@@ -1,20 +1,41 @@
 from fastapi import APIRouter, HTTPException
+import logging
 
-from app.models.request_models import ChatRequest
-from app.models.response_models import ChatResponse
-from app.services.llm_Services import generate_response
+from app.models.request_models import (
+    ChatRequest
+)
+
+from app.models.response_models import (
+    ChatResponse
+)
+
+from app.agent.orchestrator import (
+    run_agent
+)
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
+@router.post(
+    "/chat",
+    response_model=ChatResponse
+)
 
-@router.post("/chat", response_model=ChatResponse)
-async def chat(request: ChatRequest):
+async def chat_endpoint(
+    request: ChatRequest
+):
+
     try:
-        response = generate_response(request.message)
-    except RuntimeError as error:
+        response = run_agent(
+            request.message
+        )
+    except Exception as error:
+        logger.exception("Chat agent failed")
         raise HTTPException(
             status_code=500,
-            detail=str(error),
+            detail=f"Chat agent failed: {error}",
         ) from error
 
-    return ChatResponse(response=response)
+    return ChatResponse(
+        response=response
+    )

@@ -1,19 +1,27 @@
 import {
   useState,
-  useEffect,
-  useRef
+  useRef,
+  useEffect
 } from "react"
 
 import MessageBubble from "./MessageBubble"
 
+import UploadBox from "./UploadBox"
+
+import { motion } from "framer-motion"
+
 const ChatWindow = ({
+
   messages,
+
   sendMessage,
+
   loading
+
 }) => {
 
-  const [input, setInput] = useState("")
-  const safeMessages = Array.isArray(messages) ? messages : []
+  const [input, setInput] =
+    useState("")
 
   const bottomRef = useRef(null)
 
@@ -23,7 +31,7 @@ const ChatWindow = ({
       behavior: "smooth"
     })
 
-  }, [messages])
+  }, [messages, loading])
 
   const handleSend = () => {
 
@@ -32,19 +40,6 @@ const ChatWindow = ({
     sendMessage(input)
 
     setInput("")
-  }
-
-  const handleKeyDown = (e) => {
-
-    if (
-      e.key === "Enter" &&
-      !e.shiftKey
-    ) {
-
-      e.preventDefault()
-
-      handleSend()
-    }
   }
 
   return (
@@ -61,38 +56,42 @@ const ChatWindow = ({
       "
     >
 
-      {/* Top Navbar */}
+      {/* HEADER */}
 
       <div
         className="
-          p-5
+          p-6
           border-b
           border-[#2a2d3a]
-          flex
-          justify-between
-          items-center
         "
       >
 
-        <div>
+        <h1
+          className="
+            text-3xl
+            font-bold
+            text-white
+          "
+        >
 
-          <h1 className="text-xl font-bold">
+          AI Healthcare Assistant
 
-            AI Healthcare Assistant
+        </h1>
 
-          </h1>
+        <p
+          className="
+            text-gray-400
+            mt-1
+          "
+        >
 
-          <p className="text-sm text-gray-400">
+          RAG-powered medical intelligence
 
-            RAG-powered medical intelligence
-
-          </p>
-
-        </div>
+        </p>
 
       </div>
 
-      {/* Messages */}
+      {/* CHAT MESSAGES */}
 
       <div
         className="
@@ -104,98 +103,167 @@ const ChatWindow = ({
       >
 
         {
-          safeMessages.map((msg, index) => (
+          messages.length === 0 && (
+
+            <div
+              className="
+                h-full
+                flex
+                items-center
+                justify-center
+                text-center
+              "
+            >
+
+              <div>
+
+                <h2
+                  className="
+                    text-4xl
+                    font-bold
+                    text-white
+                  "
+                >
+
+                  Welcome to HealthMind AI
+
+                </h2>
+
+                <p
+                  className="
+                    text-gray-400
+                    mt-4
+                    text-lg
+                  "
+                >
+
+                  Upload reports and ask
+                  healthcare questions
+
+                </p>
+
+              </div>
+
+            </div>
+          )
+        }
+
+        {
+          messages.map((msg, index) => (
 
             <MessageBubble
+
               key={index}
+
               role={msg.role}
+
               content={msg.content}
             />
-
           ))
         }
 
         {
           loading && (
 
-            <div
+            <motion.div
+
+              initial={{ opacity: 0 }}
+
+              animate={{ opacity: 1 }}
+
               className="
                 text-gray-400
                 italic
               "
             >
 
-              AI is thinking...
+              AI Agent is thinking...
 
-            </div>
+            </motion.div>
           )
         }
 
-        <div ref={bottomRef}></div>
+        <div ref={bottomRef} />
 
       </div>
 
-      {/* Input */}
+      {/* PDF UPLOAD */}
+
+      <div className="px-6 pt-2">
+
+        <UploadBox />
+
+      </div>
+
+      {/* INPUT */}
 
       <div
         className="
-          p-5
+          p-6
           border-t
           border-[#2a2d3a]
+          flex
+          gap-4
         "
       >
 
-        <div className="flex gap-4">
+        <textarea
 
-          <textarea
+          value={input}
 
-            value={input}
+          onChange={(e) =>
+            setInput(e.target.value)
+          }
 
-            onChange={(e) =>
-              setInput(e.target.value)
+          onKeyDown={(e) => {
+
+            if (
+              e.key === "Enter" &&
+              !e.shiftKey
+            ) {
+
+              e.preventDefault()
+
+              handleSend()
             }
+          }}
 
-            onKeyDown={handleKeyDown}
+          placeholder="
+            Ask healthcare question...
+          "
 
-            placeholder="
-Ask healthcare question...
-            "
+          className="
+            flex-1
+            bg-[#232734]
+            border
+            border-[#2a2d3a]
+            rounded-2xl
+            p-5
+            text-white
+            resize-none
+            outline-none
+            h-[80px]
+          "
+        />
 
-            rows={2}
+        <button
 
-            className="
-              flex-1
-              bg-[#232734]
-              border
-              border-[#2a2d3a]
-              rounded-2xl
-              p-4
-              text-white
-              outline-none
-              resize-none
-              focus:border-blue-500
-            "
-          />
+          onClick={handleSend}
 
-          <button
+          className="
+            w-[150px]
+            bg-blue-600
+            hover:bg-blue-700
+            transition
+            rounded-2xl
+            text-white
+            font-semibold
+          "
+        >
 
-            onClick={handleSend}
+          Send
 
-            className="
-              px-8
-              rounded-2xl
-              bg-blue-600
-              hover:bg-blue-700
-              transition
-              font-semibold
-            "
-          >
-
-            Send
-
-          </button>
-
-        </div>
+        </button>
 
       </div>
 
