@@ -3,6 +3,8 @@ import {
   Route
 } from "react-router-dom"
 
+import LandingPage from "./pages/LandingPage"
+
 import Login from "./pages/Login"
 
 import Signup from "./pages/Signup"
@@ -27,10 +29,17 @@ function App() {
 
     <Routes>
 
-      {/* AUTH */}
+      {/* LANDING PAGE */}
 
       <Route
         path="/"
+        element={<LandingPage />}
+      />
+
+      {/* AUTH */}
+
+      <Route
+        path="/login"
         element={<Login />}
       />
 

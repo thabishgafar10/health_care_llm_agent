@@ -1,44 +1,84 @@
 from app.services.rag_service import (
-    retrieve_context
+    query_rag
 )
 
 from app.services.llm_Services import (
     ask_llm
 )
 
+from app.services.medical_data_store import (
+    medical_reports
+)
+
 def rag_search(query: str):
 
-    try:
+    rag_context = query_rag(query)
 
-        result = retrieve_context(query)
+    reports_context = ""
 
-        no_document_message = (
-            "No uploaded medical documents are available yet."
-        )
+    # BUILD REPORT CONTEXT
 
-        if (
-            not result or
-            result.strip() == "" or
-            result.strip() == no_document_message
-        ):
+    for report in medical_reports:
 
-            return ask_llm(query)
+        reports_context += f"""
 
-        prompt = f"""
-        Use the medical document context below if it is relevant.
-        If the context is not relevant, answer the user normally.
+REPORT:
+{report['filename']}
 
-        Context:
-        {result}
+SUMMARY:
+{report['summary']}
 
-        User question:
-        {query}
-        """
+CONDITIONS:
+{', '.join(report['conditions'])}
 
-        return ask_llm(prompt)
+RISK LEVEL:
+{report['risk_level']}
 
-    except Exception:
+FINDINGS:
+{', '.join(report['findings'])}
 
-        # FALLBACK TO LLM
+RECOMMENDATIONS:
+{', '.join(report['recommendations'])}
+
+ENTITIES:
+{', '.join(report['entities'])}
+
+"""
+
+    if (
+        not reports_context.strip() and
+        not rag_context.strip()
+    ):
 
         return ask_llm(query)
+
+    # FINAL PROMPT
+
+    prompt = f"""
+
+You are an advanced healthcare AI assistant.
+
+Use:
+1. Uploaded medical reports
+2. Extracted findings
+3. RAG medical context
+
+Provide:
+- accurate healthcare explanations
+- important findings
+- detected risks
+- recommendations
+- preventive measures
+
+MEDICAL REPORT DATA:
+{reports_context}
+
+RAG CONTEXT:
+{rag_context}
+
+USER QUESTION:
+{query}
+
+"""
+
+    return ask_llm(prompt)

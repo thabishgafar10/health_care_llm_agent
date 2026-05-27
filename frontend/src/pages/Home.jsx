@@ -8,35 +8,35 @@ const Home = () => {
 
   const {
 
-    chats,
+  chats,
 
-    activeChat,
+  activeChat,
 
-    activeChatId,
+  activeChatId,
 
-    setActiveChatId,
+  setActiveChatId,
 
-    createNewChat,
+  createNewChat,
 
-    sendMessage,
+  sendMessage,
 
-    loading
+  deleteChat,
 
-  } = useChat()
+  loading
+
+} = useChat()
 
   return (
 
     <div
       className="
         h-full
-        bg-[#0f1117]
+        bg-[#f5f7fb]
         flex
-        gap-4
-        p-4
+        gap-5
+        p-5
       "
     >
-
-      {/* LEFT SIDEBAR */}
 
       <Sidebar
 
@@ -51,9 +51,10 @@ const Home = () => {
         createNewChat={
           createNewChat
         }
-      />
 
-      {/* CHAT AREA */}
+        deleteChat={deleteChat}
+        
+      />
 
       <div className="flex-1">
 

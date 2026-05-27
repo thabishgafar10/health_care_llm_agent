@@ -1,78 +1,65 @@
 import {
-  useState,
-  useEffect
+  useEffect,
+  useState
 } from "react"
 
 import API from "../services/api"
 
 const useChat = () => {
 
-  const getErrorMessage = (error) => {
+  // LOAD SAVED CHATS
 
-    const detail =
-      error.response?.data?.detail
+  const savedChats = JSON.parse(
 
-    if (typeof detail === "string") {
-      return detail
+    localStorage.getItem(
+      "healthmind_chats"
+    )
+
+  ) || [
+
+    {
+      id: 1,
+
+      title: "New Chat",
+
+      messages: []
     }
+  ]
 
-    if (error.code === "ERR_NETWORK") {
-      return "Cannot reach the backend. Make sure the FastAPI server is running on the URL in frontend/.env."
-    }
+  // STATES
 
-    return "Something went wrong while getting the assistant response."
-  }
+  const [chats, setChats] =
+    useState(savedChats)
 
-  const [chats, setChats] = useState([])
+  const [activeChatId,
+    setActiveChatId] =
+    useState(savedChats[0].id)
 
-  const [activeChatId, setActiveChatId] =
-    useState(null)
-
-  const [loading, setLoading] =
+  const [loading,
+    setLoading] =
     useState(false)
 
-  // LOAD CHATS
-
-  useEffect(() => {
-
-    const savedChats =
-      localStorage.getItem(
-        "health_chats"
-      )
-
-    if (savedChats) {
-
-      const parsedChats =
-        JSON.parse(savedChats)
-
-      setChats(parsedChats)
-
-      if (parsedChats.length > 0) {
-
-        setActiveChatId(
-          parsedChats[0].id
-        )
-      }
-
-    } else {
-
-      createNewChat()
-    }
-
-  }, [])
-
-  // SAVE CHATS
+  // SAVE TO LOCAL STORAGE
 
   useEffect(() => {
 
     localStorage.setItem(
 
-      "health_chats",
+      "healthmind_chats",
 
       JSON.stringify(chats)
     )
 
   }, [chats])
+
+  // ACTIVE CHAT
+
+  const activeChat =
+    chats.find(
+
+      chat =>
+        chat.id === activeChatId
+    )
 
   // CREATE NEW CHAT
 
@@ -82,30 +69,30 @@ const useChat = () => {
 
       id: Date.now(),
 
-      title: "New Chat",
+      title: `Chat ${chats.length + 1}`,
 
       messages: []
     }
 
-    setChats(prev => [
+    setChats([
       newChat,
-      ...prev
+      ...chats
     ])
 
-    setActiveChatId(newChat.id)
+    setActiveChatId(
+      newChat.id
+    )
   }
-
-  // ACTIVE CHAT
-
-  const activeChat = chats.find(
-    chat => chat.id === activeChatId
-  )
 
   // SEND MESSAGE
 
-  const sendMessage = async (text) => {
+  const sendMessage = async (
+    text
+  ) => {
 
     if (!text.trim()) return
+
+    // USER MESSAGE
 
     const userMessage = {
 
@@ -114,10 +101,10 @@ const useChat = () => {
       content: text
     }
 
-    // UPDATE USER MESSAGE
+    // UPDATE CHAT
 
-    const updatedChats = chats.map(
-      chat => {
+    const updatedChats =
+      chats.map(chat => {
 
         if (
           chat.id === activeChatId
@@ -128,20 +115,24 @@ const useChat = () => {
             ...chat,
 
             title:
+
               chat.messages.length === 0
-                ? text.slice(0, 30)
-                : chat.title,
+
+              ? text.slice(0, 30)
+
+              : chat.title,
 
             messages: [
+
               ...chat.messages,
+
               userMessage
             ]
           }
         }
 
         return chat
-      }
-    )
+      })
 
     setChats(updatedChats)
 
@@ -149,12 +140,17 @@ const useChat = () => {
 
     try {
 
-      const response = await API.post(
-        "/chat",
-        {
-          message: text
-        }
-      )
+      // API CALL
+
+      const response =
+        await API.post(
+
+          "/chat",
+
+          {
+            message: text
+          }
+        )
 
       const aiMessage = {
 
@@ -164,8 +160,10 @@ const useChat = () => {
           response.data.response
       }
 
-      setChats(prev =>
-        prev.map(chat => {
+      // UPDATE WITH AI RESPONSE
+
+      const finalChats =
+        updatedChats.map(chat => {
 
           if (
             chat.id === activeChatId
@@ -176,7 +174,9 @@ const useChat = () => {
               ...chat,
 
               messages: [
+
                 ...chat.messages,
+
                 aiMessage
               ]
             }
@@ -184,21 +184,23 @@ const useChat = () => {
 
           return chat
         })
-      )
+
+      setChats(finalChats)
 
     } catch (error) {
 
       console.error(error)
 
-      const aiMessage = {
+      const errorMessage = {
 
         role: "assistant",
 
-        content: getErrorMessage(error)
+        content:
+          "Something went wrong while contacting the AI system."
       }
 
-      setChats(prev =>
-        prev.map(chat => {
+      const finalChats =
+        updatedChats.map(chat => {
 
           if (
             chat.id === activeChatId
@@ -209,15 +211,18 @@ const useChat = () => {
               ...chat,
 
               messages: [
+
                 ...chat.messages,
-                aiMessage
+
+                errorMessage
               ]
             }
           }
 
           return chat
         })
-      )
+
+      setChats(finalChats)
 
     } finally {
 
@@ -225,22 +230,65 @@ const useChat = () => {
     }
   }
 
-  return {
+  const deleteChat = (chatId) => {
 
-    chats,
+  const filteredChats = chats.filter(
 
-    activeChat,
+    chat => chat.id !== chatId
+  )
 
-    activeChatId,
+  // PREVENT EMPTY STATE
 
-    setActiveChatId,
+  if (filteredChats.length === 0) {
 
-    createNewChat,
+    const defaultChat = {
 
-    sendMessage,
+      id: Date.now(),
 
-    loading
+      title: "New Chat",
+
+      messages: []
+    }
+
+    setChats([defaultChat])
+
+    setActiveChatId(
+      defaultChat.id
+    )
+
+    return
   }
+
+  setChats(filteredChats)
+
+  // HANDLE ACTIVE CHAT
+
+  if (activeChatId === chatId) {
+
+    setActiveChatId(
+      filteredChats[0].id
+    )
+  }
+}
+
+return {
+
+  chats,
+
+  activeChat,
+
+  activeChatId,
+
+  setActiveChatId,
+
+  createNewChat,
+
+  sendMessage,
+
+  deleteChat,
+
+  loading
+}
 }
 
 export default useChat

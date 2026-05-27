@@ -47,12 +47,13 @@ const ChatWindow = ({
     <div
       className="
         h-full
-        bg-[#171923]
+        bg-white
         rounded-3xl
         border
-        border-[#2a2d3a]
+        border-[#dbe4f0]
         flex
         flex-col
+        overflow-hidden
       "
     >
 
@@ -60,45 +61,72 @@ const ChatWindow = ({
 
       <div
         className="
-          p-6
+          px-6
+          py-4
           border-b
-          border-[#2a2d3a]
+          border-[#dbe4f0]
+          bg-white
+          flex
+          items-center
+          justify-between
         "
       >
 
-        <h1
+        <div>
+
+          <h1
+            className="
+              text-2xl
+              font-bold
+              text-[#1f2937]
+            "
+          >
+
+            HealthMind AI
+
+          </h1>
+
+          <p
+            className="
+              text-[#6b7280]
+              text-sm
+              mt-1
+            "
+          >
+
+            Intelligent healthcare assistant
+
+          </p>
+
+        </div>
+
+        <div
           className="
-            text-3xl
-            font-bold
-            text-white
+            bg-[#eef9fc]
+            text-[#69d2e7]
+            px-4
+            py-2
+            rounded-full
+            text-sm
+            font-medium
           "
         >
 
-          AI Healthcare Assistant
+          AI Active
 
-        </h1>
-
-        <p
-          className="
-            text-gray-400
-            mt-1
-          "
-        >
-
-          RAG-powered medical intelligence
-
-        </p>
+        </div>
 
       </div>
 
-      {/* CHAT MESSAGES */}
+      {/* CHAT AREA */}
 
       <div
         className="
           flex-1
           overflow-y-auto
-          p-6
-          space-y-4
+          px-6
+          py-5
+          bg-[#f9fbfd]
         "
       >
 
@@ -111,34 +139,33 @@ const ChatWindow = ({
                 flex
                 items-center
                 justify-center
-                text-center
               "
             >
 
-              <div>
+              <div className="text-center">
 
                 <h2
                   className="
                     text-4xl
                     font-bold
-                    text-white
+                    text-[#1f2937]
                   "
                 >
 
-                  Welcome to HealthMind AI
+                  Welcome Back
 
                 </h2>
 
                 <p
                   className="
-                    text-gray-400
-                    mt-4
+                    text-[#6b7280]
+                    mt-3
                     text-lg
                   "
                 >
 
                   Upload reports and ask
-                  healthcare questions
+                  medical questions
 
                 </p>
 
@@ -148,122 +175,147 @@ const ChatWindow = ({
           )
         }
 
-        {
-          messages.map((msg, index) => (
+        <div className="space-y-6">
 
-            <MessageBubble
+          {
+            messages.map((msg, index) => (
 
-              key={index}
+              <MessageBubble
 
-              role={msg.role}
+                key={index}
 
-              content={msg.content}
-            />
-          ))
-        }
+                role={msg.role}
 
-        {
-          loading && (
+                content={msg.content}
+              />
+            ))
+          }
 
-            <motion.div
+          {
+            loading && (
 
-              initial={{ opacity: 0 }}
+              <motion.div
 
-              animate={{ opacity: 1 }}
+                initial={{ opacity: 0 }}
 
-              className="
-                text-gray-400
-                italic
-              "
-            >
+                animate={{ opacity: 1 }}
 
-              AI Agent is thinking...
+                className="
+                  bg-white
+                  border
+                  border-[#dbe4f0]
+                  px-5
+                  py-4
+                  rounded-2xl
+                  w-fit
+                  text-[#6b7280]
+                  shadow-sm
+                "
+              >
 
-            </motion.div>
-          )
-        }
+                AI is analyzing...
 
-        <div ref={bottomRef} />
+              </motion.div>
+            )
+          }
+
+          <div ref={bottomRef} />
+
+        </div>
 
       </div>
 
-      {/* PDF UPLOAD */}
-
-      <div className="px-6 pt-2">
-
-        <UploadBox />
-
-      </div>
-
-      {/* INPUT */}
+      {/* INPUT AREA */}
 
       <div
         className="
-          p-6
+          px-6
+          py-4
           border-t
-          border-[#2a2d3a]
-          flex
-          gap-4
+          border-[#dbe4f0]
+          bg-white
         "
       >
 
-        <textarea
-
-          value={input}
-
-          onChange={(e) =>
-            setInput(e.target.value)
-          }
-
-          onKeyDown={(e) => {
-
-            if (
-              e.key === "Enter" &&
-              !e.shiftKey
-            ) {
-
-              e.preventDefault()
-
-              handleSend()
-            }
-          }}
-
-          placeholder="
-            Ask healthcare question...
-          "
-
+        <div
           className="
-            flex-1
-            bg-[#232734]
-            border
-            border-[#2a2d3a]
-            rounded-2xl
-            p-5
-            text-white
-            resize-none
-            outline-none
-            h-[80px]
-          "
-        />
-
-        <button
-
-          onClick={handleSend}
-
-          className="
-            w-[150px]
-            bg-blue-600
-            hover:bg-blue-700
-            transition
-            rounded-2xl
-            text-white
-            font-semibold
+            flex
+            items-end
+            gap-3
           "
         >
 
-          Send
+          {/* UPLOAD */}
 
-        </button>
+          <UploadBox />
+
+          {/* TEXTAREA */}
+
+          <textarea
+
+            value={input}
+
+            onChange={(e) =>
+              setInput(e.target.value)
+            }
+
+            onKeyDown={(e) => {
+
+              if (
+                e.key === "Enter" &&
+                !e.shiftKey
+              ) {
+
+                e.preventDefault()
+
+                handleSend()
+              }
+            }}
+
+            placeholder="
+              Ask anything about healthcare...
+            "
+
+            className="
+              flex-1
+              bg-[#f3f6fb]
+              border
+              border-[#dbe4f0]
+              rounded-2xl
+              px-5
+              py-4
+              text-[#1f2937]
+              resize-none
+              outline-none
+              min-h-[60px]
+              max-h-[140px]
+            "
+          />
+
+          {/* SEND BUTTON */}
+
+          <button
+
+            onClick={handleSend}
+
+            className="
+              h-[60px]
+              px-8
+              bg-[#69d2e7]
+              hover:bg-[#55c4da]
+              transition
+              rounded-2xl
+              text-white
+              font-semibold
+              shadow-sm
+            "
+          >
+
+            Send
+
+          </button>
+
+        </div>
 
       </div>
 

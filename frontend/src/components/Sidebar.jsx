@@ -6,42 +6,36 @@ const Sidebar = ({
 
   setActiveChatId,
 
-  createNewChat
+  createNewChat,
+
+  deleteChat
 
 }) => {
-
-  const logout = () => {
-
-    localStorage.removeItem(
-      "health_user"
-    )
-
-    window.location.href = "/"
-  }
 
   return (
 
     <div
       className="
-        w-[300px]
-        bg-[#171923]
+        w-[320px]
+        bg-white
         rounded-3xl
-        p-5
         border
-        border-[#2a2d3a]
+        border-[#dbe4f0]
+        p-6
         flex
         flex-col
       "
     >
 
-      {/* Header */}
+      {/* HEADER */}
 
       <div>
 
         <h1
           className="
-            text-2xl
+            text-4xl
             font-bold
+            text-[#1f2937]
           "
         >
 
@@ -51,19 +45,18 @@ const Sidebar = ({
 
         <p
           className="
-            text-gray-400
-            text-sm
-            mt-1
+            text-[#6b7280]
+            mt-2
           "
         >
 
-          Healthcare Agent Platform
+          Healthcare AI Companion
 
         </p>
 
       </div>
 
-      {/* New Chat */}
+      {/* NEW CHAT */}
 
       <button
 
@@ -71,12 +64,13 @@ const Sidebar = ({
 
         className="
           mt-8
-          w-full
-          bg-blue-600
-          hover:bg-blue-700
+          bg-[#69d2e7]
+          hover:bg-[#55c4da]
           transition
-          p-4
+          text-white
+          py-4
           rounded-2xl
+          text-lg
           font-semibold
         "
       >
@@ -85,64 +79,99 @@ const Sidebar = ({
 
       </button>
 
-      {/* Chat History */}
+      {/* CHAT LIST */}
 
-      <div className="mt-8 flex-1 overflow-y-auto">
+      <div className="mt-10 flex-1 overflow-y-auto">
 
-        <p
+        <h2
           className="
-            text-gray-400
-            text-sm
+            text-[#6b7280]
+            font-semibold
             mb-4
           "
         >
 
           Recent Chats
 
-        </p>
+        </h2>
 
         <div className="space-y-3">
 
           {
             chats.map(chat => (
 
-              <button
+              <div
 
                 key={chat.id}
-
-                onClick={() =>
-                  setActiveChatId(chat.id)
-                }
 
                 className={
 
                   activeChatId === chat.id
 
                   ? `
-                    w-full
-                    text-left
-                    bg-blue-600
+                    flex
+                    items-center
+                    justify-between
+                    bg-[#69d2e7]
+                    text-white
                     p-4
                     rounded-2xl
-                    truncate
                   `
 
                   : `
-                    w-full
-                    text-left
-                    bg-[#232734]
-                    hover:bg-[#2d3345]
+                    flex
+                    items-center
+                    justify-between
+                    bg-[#f3f6fb]
+                    hover:bg-[#e8eef7]
                     transition
+                    text-[#1f2937]
                     p-4
                     rounded-2xl
-                    truncate
                   `
                 }
               >
 
-                {chat.title}
+                {/* CHAT TITLE */}
 
-              </button>
+                <button
+
+                  onClick={() =>
+                    setActiveChatId(chat.id)
+                  }
+
+                  className="
+                    flex-1
+                    text-left
+                    truncate
+                  "
+                >
+
+                  {chat.title}
+
+                </button>
+
+                {/* DELETE */}
+
+                <button
+
+                  onClick={() =>
+                    deleteChat(chat.id)
+                  }
+
+                  className="
+                    ml-3
+                    opacity-70
+                    hover:opacity-100
+                    transition
+                  "
+                >
+
+                  ✕
+
+                </button>
+
+              </div>
             ))
           }
 
@@ -150,28 +179,27 @@ const Sidebar = ({
 
       </div>
 
-      {/* Bottom */}
+      {/* FOOTER */}
 
-      <div className="mt-6">
+      <div
+        className="
+          pt-6
+          border-t
+          border-[#dbe4f0]
+        "
+      >
 
-        <button
-
-          onClick={logout}
-
+        <p
           className="
-            w-full
-            bg-red-500
-            hover:bg-red-600
-            transition
-            p-4
-            rounded-2xl
-            font-semibold
+            text-[#9ca3af]
+            text-sm
+            text-center
           "
         >
 
-          Logout
+          AI-powered healthcare assistant
 
-        </button>
+        </p>
 
       </div>
 

@@ -1,52 +1,39 @@
+const tools = [
+
+  {
+    title: "Symptom Analyzer",
+    description:
+      "AI-powered healthcare symptom intelligence"
+  },
+
+  {
+    title: "Report Summarizer",
+    description:
+      "Medical PDF summarization engine"
+  },
+
+  {
+    title: "RAG Knowledge Search",
+    description:
+      "Semantic medical retrieval system"
+  },
+
+  {
+    title: "Document Intelligence",
+    description:
+      "Healthcare document analysis pipeline"
+  }
+]
+
 const Tools = () => {
-
-  const tools = [
-
-    {
-      name: "Symptom Analyzer",
-      description:
-        "AI-powered healthcare symptom intelligence"
-    },
-
-    {
-      name: "Report Summarizer",
-      description:
-        "Medical PDF summarization engine"
-    },
-
-    {
-      name: "RAG Knowledge Search",
-      description:
-        "Semantic medical retrieval system"
-    },
-
-    {
-      name: "Document Intelligence",
-      description:
-        "Healthcare document analysis pipeline"
-    },
-
-    {
-      name: "Memory Retrieval",
-      description:
-        "Persistent healthcare chat memory"
-    },
-
-    {
-      name: "Risk Predictor",
-      description:
-        "AI-generated healthcare risk analysis"
-    }
-  ]
 
   return (
 
     <div
       className="
         min-h-screen
-        bg-[#0f1117]
+        bg-[#f5f7fb]
         p-8
-        text-white
       "
     >
 
@@ -54,6 +41,7 @@ const Tools = () => {
         className="
           text-5xl
           font-bold
+          text-[#1f2937]
         "
       >
 
@@ -63,8 +51,9 @@ const Tools = () => {
 
       <p
         className="
-          text-gray-400
+          text-[#6b7280]
           mt-3
+          text-lg
         "
       >
 
@@ -75,46 +64,46 @@ const Tools = () => {
       <div
         className="
           grid
-          grid-cols-3
+          grid-cols-2
           gap-6
-          mt-12
+          mt-10
         "
       >
 
         {
-          tools.map(tool => (
+          tools.map((tool, index) => (
 
             <div
 
-              key={tool.name}
+              key={index}
 
               className="
-                bg-[#171923]
+                bg-white
                 border
-                border-[#2a2d3a]
-                p-6
+                border-[#dbe4f0]
                 rounded-3xl
-                hover:border-blue-500
-                hover:scale-[1.02]
-                transition
+                p-7
+                shadow-sm
               "
             >
 
               <h2
                 className="
-                  text-2xl
-                  font-semibold
+                  text-3xl
+                  font-bold
+                  text-[#1f2937]
                 "
               >
 
-                {tool.name}
+                {tool.title}
 
               </h2>
 
               <p
                 className="
-                  text-gray-400
+                  text-[#6b7280]
                   mt-4
+                  text-lg
                 "
               >
 

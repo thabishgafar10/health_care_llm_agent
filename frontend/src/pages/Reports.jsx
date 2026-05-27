@@ -1,18 +1,51 @@
+import {
+  useEffect,
+  useState
+} from "react"
+
+import API from "../services/api"
+
 const Reports = () => {
+
+  const [reports, setReports] =
+    useState([])
+
+  useEffect(() => {
+
+    fetchReports()
+
+  }, [])
+
+  const fetchReports = async () => {
+
+    try {
+
+      const response =
+        await API.get("/reports")
+
+      setReports(response.data)
+
+    } catch (error) {
+
+      console.error(error)
+    }
+  }
 
   return (
 
     <div
       className="
+        min-h-screen
+        bg-[#f5f7fb]
         p-8
-        text-white
       "
     >
 
       <h1
         className="
-          text-4xl
+          text-5xl
           font-bold
+          text-[#1f2937]
         "
       >
 
@@ -22,71 +55,96 @@ const Reports = () => {
 
       <p
         className="
-          text-gray-400
-          mt-2
+          text-[#6b7280]
+          mt-3
+          text-lg
         "
       >
 
-        AI-powered report analysis
+        AI-powered healthcare analysis
 
       </p>
 
       <div
         className="
-          grid
-          grid-cols-3
-          gap-6
           mt-10
+          grid
+          grid-cols-2
+          gap-6
         "
       >
 
-        <div
-          className="
-            bg-[#171923]
-            p-6
-            rounded-3xl
-            border
-            border-[#2a2d3a]
-          "
-        >
+        {
+          reports.map((report, index) => (
 
-          <h2 className="text-xl font-semibold">
+            <div
 
-            Blood Report
+              key={index}
 
-          </h2>
+              className="
+                bg-white
+                border
+                border-[#dbe4f0]
+                rounded-3xl
+                p-7
+                shadow-sm
+              "
+            >
 
-          <p className="text-gray-400 mt-3">
+              <h2
+                className="
+                  text-2xl
+                  font-bold
+                  text-[#1f2937]
+                "
+              >
 
-            AI detected elevated glucose levels.
+                {report.filename}
 
-          </p>
+              </h2>
 
-        </div>
+              <p
+                className="
+                  text-[#6b7280]
+                  mt-4
+                  leading-relaxed
+                "
+              >
 
-        <div
-          className="
-            bg-[#171923]
-            p-6
-            rounded-3xl
-            border
-            border-[#2a2d3a]
-          "
-        >
+                {report.summary}
 
-          <h2 className="text-xl font-semibold">
+              </p>
 
-            Kidney Analysis
+              <div className="mt-6">
 
-          </h2>
+                <h3
+                  className="
+                    font-semibold
+                    text-[#1f2937]
+                  "
+                >
 
-          <p className="text-gray-400 mt-3">
+                  Risk Level
 
-            AI identified mild abnormalities.
+                </h3>
 
-          </p>
+                <p
+                  className="
+                    text-[#69d2e7]
+                    mt-2
+                    font-medium
+                  "
+                >
 
-        </div>
+                  {report.risk_level}
+
+                </p>
+
+              </div>
+
+            </div>
+          ))
+        }
 
       </div>
 

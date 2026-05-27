@@ -4,32 +4,42 @@ from app.services.embedding_service import (
     generate_embedding
 )
 
+# CHROMA CLIENT
+
 client = chromadb.Client()
 
 collection = client.get_or_create_collection(
-    name="medical_knowledge"
+    name="medical_documents"
 )
 
+# CHUNKING
 
 def chunk_text(
+
     text,
+
     chunk_size=500
 ):
 
     chunks = []
 
     for i in range(
+
         0,
+
         len(text),
+
         chunk_size
     ):
 
         chunks.append(
+
             text[i:i + chunk_size]
         )
 
     return chunks
 
+# ADD DOCUMENT
 
 def add_document(text: str):
 
@@ -48,23 +58,22 @@ def add_document(text: str):
             ids=[f"doc_{index}"]
         )
 
+# QUERY RAG
 
-def retrieve_context(query: str):
+def query_rag(query: str):
 
-    if collection.count() == 0:
-        return "No uploaded medical documents are available yet."
-
-    query_embedding = generate_embedding(query)
+    embedding = generate_embedding(query)
 
     results = collection.query(
 
-        query_embeddings=[query_embedding],
+        query_embeddings=[embedding],
 
         n_results=3
     )
 
-    contexts = results.get("documents", [[]])[0]
+    documents = results.get(
+        "documents",
+        [[]]
+    )[0]
 
-    combined_context = "\n".join(contexts)
-
-    return combined_context
+    return "\n".join(documents)

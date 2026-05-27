@@ -1,48 +1,88 @@
 const MessageBubble = ({
+
   role,
+
   content
+
 }) => {
-  const messageContent = String(content ?? "")
+
+  const isUser =
+    role === "user"
 
   return (
 
     <div
       className={
-        role === "user"
+
+        isUser
+
         ? "flex justify-end"
+
         : "flex justify-start"
       }
     >
 
       <div
         className={
-          role === "user"
+
+          isUser
 
           ? `
-            bg-blue-600
+            max-w-[70%]
+            bg-[#69d2e7]
             text-white
-            p-5
-            rounded-3xl
-            max-w-2xl
+            px-5
+            py-4
+            rounded-[26px]
+            shadow-sm
           `
 
           : `
-            bg-[#1c1f2b]
+            max-w-[78%]
+            bg-white
             border
-            border-[#2a2d3a]
-            text-white
-            p-5
-            rounded-3xl
-            max-w-2xl
+            border-[#dbe4f0]
+            text-[#1f2937]
+            px-6
+            py-5
+            rounded-[26px]
+            shadow-sm
           `
         }
       >
 
-        <div className="whitespace-pre-wrap">
+        {/* LABEL */}
 
-          {messageContent}
+        <div
+          className="
+            text-xs
+            font-semibold
+            mb-3
+            opacity-70
+          "
+        >
+
+          {
+            isUser
+            ? "YOU"
+            : "HEALTHMIND AI"
+          }
 
         </div>
+
+        {/* CONTENT */}
+
+        <p
+          className="
+            whitespace-pre-wrap
+            leading-8
+            text-[15px]
+          "
+        >
+
+          {content}
+
+        </p>
 
       </div>
 

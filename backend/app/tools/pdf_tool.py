@@ -1,17 +1,38 @@
+from app.services.medical_data_store import (
+    medical_reports
+)
+
 def analyze_pdf(query: str):
+
+    if not medical_reports:
+
+        return """
+
+No medical reports uploaded yet.
+
+Please upload a PDF report first.
+
+"""
+
+    latest_report = medical_reports[-1]
 
     return f"""
 
-PDF Analysis Result:
+Medical Report Analysis
 
-The uploaded medical report
-was analyzed successfully.
+Filename:
+{latest_report['filename']}
 
-Relevant findings related to:
+Summary:
+{latest_report['summary']}
 
-'{query}'
+Conditions:
+{', '.join(latest_report['conditions'])}
 
-were identified using
-document intelligence.
+Risk Level:
+{latest_report['risk_level']}
+
+Recommendations:
+{', '.join(latest_report['recommendations'])}
 
 """

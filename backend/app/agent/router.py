@@ -1,53 +1,85 @@
-from app.tools.pdf_tool import (
-    analyze_pdf
-)
-
 from app.tools.rag_tool import (
     rag_search
 )
 
-from app.tools.summary_tool import (
-    summarize_report
+from app.services.llm_Services import (
+    ask_llm
 )
 
-from app.tools.symptom_tool import (
-    symptom_analysis
-)
+# SIMPLE GENERAL CHAT DETECTION
+
+GENERAL_MESSAGES = [
+
+    "hi",
+    "hello",
+    "hey",
+    "how are you",
+    "good morning",
+    "good evening",
+    "who are you",
+    "what can you do"
+]
+
+# REPORT KEYWORDS
+
+REPORT_KEYWORDS = [
+
+    "report",
+    "pdf",
+    "medical",
+    "findings",
+    "analysis",
+    "diagnosis",
+    "condition",
+    "risk",
+    "summary",
+    "recommendation",
+    "blood",
+    "glucose",
+    "patient"
+]
 
 def route_query(query: str):
 
-    query_lower = query.lower()
+    lower_query = query.lower()
 
-    # PDF TOOL
+    # GENERAL CHAT
 
-    if (
-        "report" in query_lower or
-        "pdf" in query_lower
+    if lower_query in GENERAL_MESSAGES:
+
+        return ask_llm(
+
+            f"""
+            You are HealthMind AI,
+            a friendly healthcare assistant.
+
+            Respond conversationally.
+
+            User:
+            {query}
+            """
+        )
+
+    # REPORT / RAG ROUTING
+
+    if any(
+        keyword in lower_query
+        for keyword in REPORT_KEYWORDS
     ):
-
-        return analyze_pdf(query)
-
-    # SUMMARY TOOL
-
-    elif (
-        "summarize" in query_lower or
-        "summary" in query_lower
-    ):
-
-        return summarize_report(query)
-
-    # SYMPTOM TOOL
-
-    elif (
-        "symptom" in query_lower or
-        "pain" in query_lower or
-        "fever" in query_lower
-    ):
-
-        return symptom_analysis(query)
-
-    # DEFAULT RAG
-
-    else:
 
         return rag_search(query)
+
+    # DEFAULT GENERAL AI
+
+    return ask_llm(
+
+        f"""
+        You are HealthMind AI,
+        an intelligent healthcare assistant.
+
+        Answer naturally and helpfully.
+
+        User:
+        {query}
+        """
+    )

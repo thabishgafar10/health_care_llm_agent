@@ -11,9 +11,11 @@ const Login = () => {
 
   const navigate = useNavigate()
 
-  const [email, setEmail] = useState("")
+  const [email, setEmail] =
+    useState("")
 
-  const [password, setPassword] = useState("")
+  const [password, setPassword] =
+    useState("")
 
   const handleLogin = () => {
 
@@ -44,51 +46,90 @@ const Login = () => {
         flex
         items-center
         justify-center
-        bg-[#0f1117]
+        bg-[#f5f7fb]
       "
     >
 
       <div
         className="
-          w-[400px]
-          bg-[#171923]
-          p-8
-          rounded-3xl
+          w-[430px]
+          bg-white
+          p-10
+          rounded-[32px]
           border
-          border-[#2a2d3a]
+          border-[#dbe4f0]
+          shadow-sm
         "
       >
 
-        <h1
-          className="
-            text-3xl
-            font-bold
-            text-white
-          "
-        >
+        {/* LOGO */}
 
-          Welcome Back
+        <div className="mb-8">
 
-        </h1>
+          <h1
+            className="
+              text-4xl
+              font-bold
+              text-[#1f2937]
+            "
+          >
 
-        <p
-          className="
-            text-gray-400
-            mt-2
-          "
-        >
+            HealthMind AI
 
-          Login to your AI workspace
+          </h1>
 
-        </p>
+          <p
+            className="
+              text-[#6b7280]
+              mt-3
+              text-lg
+            "
+          >
 
-        <div className="mt-8 space-y-4">
+            Your intelligent healthcare companion
+
+          </p>
+
+        </div>
+
+        {/* TITLE */}
+
+        <div>
+
+          <h2
+            className="
+              text-3xl
+              font-bold
+              text-[#1f2937]
+            "
+          >
+
+            Welcome Back
+
+          </h2>
+
+          <p
+            className="
+              text-[#6b7280]
+              mt-2
+            "
+          >
+
+            Login to continue your healthcare journey
+
+          </p>
+
+        </div>
+
+        {/* FORM */}
+
+        <div className="mt-8 space-y-5">
 
           <input
 
             type="email"
 
-            placeholder="Email"
+            placeholder="Enter your email"
 
             value={email}
 
@@ -98,13 +139,14 @@ const Login = () => {
 
             className="
               w-full
-              p-4
+              p-5
               rounded-2xl
-              bg-[#232734]
+              bg-[#f3f6fb]
               border
-              border-[#2a2d3a]
-              text-white
+              border-[#dbe4f0]
+              text-[#1f2937]
               outline-none
+              placeholder:text-[#9ca3af]
             "
           />
 
@@ -112,7 +154,7 @@ const Login = () => {
 
             type="password"
 
-            placeholder="Password"
+            placeholder="Enter your password"
 
             value={password}
 
@@ -122,13 +164,14 @@ const Login = () => {
 
             className="
               w-full
-              p-4
+              p-5
               rounded-2xl
-              bg-[#232734]
+              bg-[#f3f6fb]
               border
-              border-[#2a2d3a]
-              text-white
+              border-[#dbe4f0]
+              text-[#1f2937]
               outline-none
+              placeholder:text-[#9ca3af]
             "
           />
 
@@ -138,13 +181,14 @@ const Login = () => {
 
             className="
               w-full
-              bg-blue-600
-              hover:bg-blue-700
+              bg-[#69d2e7]
+              hover:bg-[#55c4da]
               transition
-              p-4
+              p-5
               rounded-2xl
               font-semibold
               text-white
+              text-lg
             "
           >
 
@@ -154,10 +198,12 @@ const Login = () => {
 
         </div>
 
+        {/* FOOTER */}
+
         <p
           className="
-            text-gray-400
-            mt-6
+            text-[#6b7280]
+            mt-8
             text-center
           "
         >
@@ -165,9 +211,12 @@ const Login = () => {
           Don't have an account?
 
           <Link
+
             to="/signup"
+
             className="
-              text-blue-500
+              text-[#69d2e7]
+              font-semibold
               ml-2
             "
           >

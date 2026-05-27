@@ -40,9 +40,9 @@ const Navbar = () => {
     <div
       className="
         h-20
-        bg-[#171923]
+        bg-white
         border-b
-        border-[#2a2d3a]
+        border-[#dbe4f0]
         flex
         items-center
         justify-between
@@ -50,32 +50,23 @@ const Navbar = () => {
       "
     >
 
-      {/* Logo */}
+      {/* LOGO */}
 
-      <div>
-
-        <h1
-          className="
-            text-2xl
-            font-bold
-            text-white
-          "
-        >
-
-          HealthMind AI
-
-        </h1>
-
-      </div>
-
-      {/* Navigation */}
-
-      <div
+      <h1
         className="
-          flex
-          gap-3
+          text-3xl
+          font-bold
+          text-[#1f2937]
         "
       >
+
+        HealthMind AI
+
+      </h1>
+
+      {/* NAV */}
+
+      <div className="flex gap-3">
 
         {
           navItems.map(item => (
@@ -91,21 +82,21 @@ const Navbar = () => {
                 location.pathname === item.path
 
                 ? `
-                  bg-blue-600
+                  bg-[#69d2e7]
+                  text-white
                   px-5
                   py-2
-                  rounded-xl
-                  text-white
+                  rounded-2xl
                 `
 
                 : `
-                  bg-[#232734]
-                  hover:bg-[#2d3345]
+                  bg-[#f3f6fb]
+                  hover:bg-[#e8eef7]
                   transition
+                  text-[#1f2937]
                   px-5
                   py-2
-                  rounded-xl
-                  text-gray-300
+                  rounded-2xl
                 `
               }
             >
@@ -118,7 +109,7 @@ const Navbar = () => {
 
       </div>
 
-      {/* Logout */}
+      {/* LOGOUT */}
 
       <button
 
@@ -132,12 +123,12 @@ const Navbar = () => {
         }}
 
         className="
-          bg-red-500
-          hover:bg-red-600
+          bg-[#69d2e7]
+          hover:bg-[#55c4da]
           transition
           px-5
           py-2
-          rounded-xl
+          rounded-2xl
           text-white
         "
       >
